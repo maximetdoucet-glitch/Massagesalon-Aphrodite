@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Praktijk — Massagesalon Aphrodite Nijmegen</title>
+  <meta name="description" content="Bezoek de praktijk aan de Hertogstraat 67 in Nijmegen-Centrum. Bereikbaarheid, parkeren en hoe je een afspraak inplant." />
+  <meta name="theme-color" content="#1A0E14" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg:     { deep: '#1A0E14', surface: '#28161E', elevated: '#371F2A' },
+            border: { subtle: '#4A2935' },
+            ink:    { primary: '#EFE5D2', muted: '#B09A82', faint: '#6F5C4F' },
+            gold:   { DEFAULT: '#D4A55A', soft: '#A88542' },
+            botanical: '#C49A6E',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'serif'],
+            sans:    ['Manrope', 'system-ui', 'sans-serif'],
+          },
+          letterSpacing: { kicker: '0.18em' },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html, body { background: #1A0E14; color: #EFE5D2; font-family: 'Manrope', system-ui, sans-serif; }
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .reveal { opacity: 0; transform: translateY(28px); }
+    .reveal-img { clip-path: inset(0 100% 0 0); }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-img { opacity: 1; transform: none; clip-path: none; }
+    }
+    ::selection { background: #D4A55A; color: #1A0E14; }
+    .leaf-deco { position: absolute; pointer-events: none; opacity: 0.10; }
+    .link-gold { position: relative; display: inline-block; }
+    .link-gold::after {
+      content: ''; position: absolute; left: 0; bottom: -3px; width: 100%; height: 1px;
+      background: currentColor; transform: scaleX(0); transform-origin: right;
+      transition: transform 350ms cubic-bezier(0.4,0,0.2,1);
+    }
+    .link-gold:hover::after { transform: scaleX(1); transform-origin: left; }
+    .img-vignette { position: relative; }
+    .img-vignette::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.55));
+      pointer-events: none; border-radius: inherit;
+    }
+    .nav-scrolled {
+      background: rgba(26,14,20,0.82);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.45);
+    }
+    .cta-gold { position: relative; overflow: hidden; isolation: isolate; }
+    .cta-gold::before {
+      content: ''; position: absolute; top: 0; left: -120%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      transition: left 800ms cubic-bezier(0.4,0,0.2,1); z-index: 1;
+    }
+    .cta-gold:hover::before { left: 130%; }
+    .cta-gold > * { position: relative; z-index: 2; }
+    .logo-mark { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; letter-spacing: 0.02em; }
+
+    @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+    /* Mobile optimization additions */
+    .fab-book {
+      animation: fab-rise 600ms cubic-bezier(0.4,0,0.2,1) 800ms backwards;
+    }
+    @keyframes fab-rise {
+      from { opacity: 0; transform: translateY(60px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 480px) {
+      .fab-book {
+        padding: 10px 16px 10px 14px;
+        font-size: 13px;
+        bottom: 14px; right: 14px;
+      }
+    }
+    /* Defeat iOS auto-zoom on form inputs (inside booking modal) */
+    @supports (-webkit-touch-callout: none) {
+      input, textarea, select { font-size: max(16px, 1rem) !important; }
+    }
+    /* Use small-viewport-height so iOS URL-bar doesn't push hero */
+    @supports (height: 100svh) {
+      section[id="top"] { min-height: 100svh; }
+    }
+    /* Hero title clamp — never overflow narrow phones */
+    @media (max-width: 480px) {
+      section[id="top"] h1 { font-size: clamp(36px, 11vw, 48px) !important; line-height: 1.08 !important; }
+    }
+    /* Booking modal: full-screen on phones */
+    @media (max-width: 600px) {
+      #book-modal .book-panel {
+        width: 100vw !important;
+        height: 100svh !important;
+        max-height: 100svh !important;
+        max-width: 100vw !important;
+        border-radius: 0 !important;
+        border: 0 !important;
+        margin: 0 !important;
+      }
+      #book-modal > div.relative {
+        padding: 0 !important;
+        align-items: stretch !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-bg-deep text-ink-primary antialiased">
+
+  <!-- ============ NAV ============ -->
+  <header id="site-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 nav-scrolled">
+    <nav class="max-w-[1280px] mx-auto px-6 lg:px-12 py-5 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <span class="w-9 h-9 rounded-full border border-gold/50 flex items-center justify-center text-gold logo-mark text-lg">a</span>
+        <span class="hidden sm:inline logo-mark text-xl text-ink-primary">Massagesalon Aphrodite <span class="text-ink-muted not-italic font-sans font-normal text-sm tracking-kicker uppercase ml-1">Massage</span></span>
+      </a>
+      <ul class="hidden lg:flex items-center gap-9 text-[13px] font-semibold tracking-kicker uppercase">
+        <li><a href="over-ons.html" class="link-gold text-ink-primary/90 hover:text-gold">Onze salon</a></li>
+        <li><a href="behandelingen.html" class="link-gold text-ink-primary/90 hover:text-gold">Massages</a></li>
+        <li><a href="behandelingen.html#cadeau" class="link-gold text-ink-primary/90 hover:text-gold">Cadeaubon</a></li>
+        <li><a href="locaties.html" class="link-gold text-gold">Praktijk</a></li>
+        <li><a href="index.html#reviews" class="link-gold text-ink-primary/90 hover:text-gold">Reviews</a></li>
+      </ul>
+      <div class="flex items-center gap-3">
+        <a data-book href="index.html#boeken" class="cta-gold hidden sm:inline-flex items-center gap-2 bg-gold text-bg-deep px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide hover:bg-gold-soft transition-colors">
+          <span>Afspraak maken</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <button id="mobile-toggle" class="lg:hidden p-2 -mr-2" aria-label="Menu openen">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+        </button>
+      </div>
+    </nav>
+    <div id="mobile-drawer" class="lg:hidden fixed inset-0 bg-bg-deep/95 backdrop-blur-lg z-40 hidden">
+      <div class="flex flex-col items-center justify-center h-full gap-8 font-display text-3xl">
+        <a href="over-ons.html">Onze salon</a>
+        <a href="behandelingen.html">Massages</a>
+        <a href="behandelingen.html#cadeau">Cadeaubon</a>
+        <a href="locaties.html" class="text-gold">Praktijk</a>
+        <a href="index.html#reviews">Reviews</a>
+        <a data-book href="index.html#boeken" class="cta-gold bg-gold text-bg-deep rounded-full px-8 py-3 text-base font-sans font-semibold tracking-wide mt-4">Afspraak maken</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ PAGE HERO ============ -->
+  <section class="pt-36 pb-12 lg:pt-44 lg:pb-16 relative overflow-hidden">
+    <svg class="leaf-deco -top-20 -left-20 w-[420px] h-[420px]" viewBox="0 0 200 200" fill="#D4A55A"><path d="M100 0c40 60 60 80 100 100-60 40-80 60-100 100C60 140 40 120 0 100 60 60 80 40 100 0z"/></svg>
+    <div class="max-w-[1280px] mx-auto px-6 lg:px-12 relative">
+      <p class="reveal text-[12px] tracking-kicker uppercase text-gold font-semibold mb-5">De praktijk</p>
+      <h1 class="reveal font-display text-5xl lg:text-7xl xl:text-8xl leading-[1.02] max-w-4xl">
+        Welkom in <em class="italic text-gold/90">Nijmegen-Centrum.</em>
+      </h1>
+      <p class="reveal text-ink-muted text-lg leading-relaxed max-w-2xl mt-7">
+        Twee privé-suites aan de Hertogstraat 67, midden in het centrum maar verstopt achter een onopvallende voordeur. Volledig op reservering — alle aandacht is voor jou.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ LOCATIE DETAIL ============ -->
+  <section class="py-12 lg:py-20">
+    <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
+      <div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
+
+        <!-- Image col -->
+        <div class="lg:col-span-7 relative">
+          <div class="reveal-img img-vignette overflow-hidden rounded-[32px] aspect-[5/4]">
+            <img src="https://images.unsplash.com/photo-1591343395082-e120087004b4?w=1400&q=80&auto=format&fit=crop" alt="De praktijkruimte van Massagesalon Aphrodite" class="w-full h-full object-cover" />
+          </div>
+          <div class="grid grid-cols-2 gap-4 mt-4">
+            <div class="reveal-img img-vignette overflow-hidden rounded-[20px] aspect-[4/3]">
+              <img src="https://images.unsplash.com/photo-1591343395082-e120087004b4?w=1400&q=80&auto=format&fit=crop" alt="Massage in uitvoering" class="w-full h-full object-cover" />
+            </div>
+            <div class="reveal-img img-vignette overflow-hidden rounded-[20px] aspect-[4/3]">
+              <img src="https://images.unsplash.com/photo-1591343395082-e120087004b4?w=1400&q=80&auto=format&fit=crop" alt="Massagesalon Aphrodite" class="w-full h-full object-cover" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Info col -->
+        <div class="lg:col-span-5 lg:pt-6">
+          <p class="reveal text-[12px] tracking-kicker uppercase text-gold font-semibold mb-4">Adres</p>
+          <h2 class="reveal font-display text-4xl lg:text-5xl leading-[1.05] mb-3">Hertogstraat 67</h2>
+          <p class="reveal text-ink-muted text-lg mb-8">Nijmegen-Centrum</p>
+
+          <div class="reveal flex items-center gap-3 mb-8 text-sm">
+            <span class="flex items-center gap-2 text-botanical">
+              <span class="w-2 h-2 rounded-full bg-botanical pulse-dot"></span>
+              <span class="font-medium text-ink-primary">Op afspraak</span>
+            </span>
+            <span class="w-px h-4 bg-border-subtle"></span>
+            <span class="text-ink-muted">Ma – Zo · 11:00 – 23:00</span>
+          </div>
+
+          <div class="reveal space-y-3 text-sm border-y border-border-subtle/60 py-7 mb-7">
+            <div class="flex items-start gap-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4A55A" stroke-width="2" stroke-linecap="round" class="mt-0.5 shrink-0"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.12.9.34 1.79.64 2.65a2 2 0 01-.45 2.11L8 9.79a16 16 0 006 6l1.31-1.3a2 2 0 012.11-.45c.86.3 1.75.52 2.65.64A2 2 0 0122 16.92z"/></svg>
+              <a href="tel:+31652766898" class="link-gold text-ink-primary">06 5276 6898</a>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="mt-0.5 shrink-0 text-gold"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1s-1.2-.5-2.4-1.5c-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 .9-1 2.3s1 2.7 1.1 2.9c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.7.5 3.4 1.3 4.8L2 22l5.4-1.4c1.4.7 3 1.1 4.6 1.1 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+              <a href="https://wa.me/31652766898" target="_blank" rel="noopener" class="link-gold text-ink-primary">WhatsApp · 06 5276 6898</a>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4A55A" stroke-width="2" stroke-linecap="round" class="mt-0.5 shrink-0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:info@massagesalonaphrodite.nl" class="link-gold text-ink-primary break-all">info@massagesalonaphrodite.nl</a>
+            </div>
+          </div>
+
+          <div class="reveal flex flex-col sm:flex-row gap-3 mb-9">
+            <a href="https://maps.google.com/?q=Hertogstraat+67,+6511+RW+Nijmegen" target="_blank" rel="noopener" class="cta-gold inline-flex items-center justify-center gap-2 bg-gold text-bg-deep px-6 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-gold-soft transition-colors">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Open in Google Maps</span>
+            </a>
+            <a data-book href="index.html#boeken" class="inline-flex items-center justify-center gap-2 border border-border-subtle text-ink-primary px-6 py-3.5 rounded-full text-sm font-semibold hover:border-gold hover:text-gold transition-colors">
+              Plan een afspraak
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MAP ============ -->
+  <section class="pb-16 lg:pb-24">
+    <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
+      <div class="reveal-img overflow-hidden rounded-[28px] border border-border-subtle aspect-[16/7] lg:aspect-[16/6]">
+        <iframe
+          src="https://www.google.com/maps?q=Hertogstraat+67,+6511+RW+Nijmegen&output=embed"
+          width="100%" height="100%" style="border:0; filter: saturate(0.7) brightness(0.85);"
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Kaart Hertogstraat 67, Nijmegen-Centrum"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRAKTISCH (bereikbaarheid) ============ -->
+  <section class="py-20 lg:py-28 bg-bg-surface/50 border-y border-border-subtle/50">
+    <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end mb-12 lg:mb-16">
+        <div class="lg:col-span-7">
+          <p class="reveal text-[12px] tracking-kicker uppercase text-gold font-semibold mb-5">Bereikbaarheid</p>
+          <h2 class="reveal font-display text-4xl lg:text-5xl leading-[1.05]">
+            Hoe kom je er <em class="italic text-gold/90">naartoe?</em>
+          </h2>
+        </div>
+        <div class="lg:col-span-5">
+          <p class="reveal text-ink-muted leading-relaxed">
+            Nijmegen-Centrum is goed bereikbaar met de fiets, het openbaar vervoer en de auto. Hieronder de praktische info.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-5 lg:gap-6">
+        <article class="reveal bg-bg-surface border border-border-subtle rounded-[20px] p-7 lg:p-8">
+          <div class="w-12 h-12 rounded-2xl border border-gold/30 flex items-center justify-center text-gold mb-5">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17l3-8h6l3 8M9 9l3-5h3"/></svg>
+          </div>
+          <h3 class="font-display text-xl lg:text-2xl leading-tight mb-3">Met de fiets</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">Vanuit het centrum ongeveer 10 minuten fietsen. Er is ruimte om je fiets bij de praktijk te plaatsen.</p>
+        </article>
+
+        <article class="reveal bg-bg-surface border border-border-subtle rounded-[20px] p-7 lg:p-8">
+          <div class="w-12 h-12 rounded-2xl border border-gold/30 flex items-center justify-center text-gold mb-5">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="6" y="3" width="12" height="14" rx="2"/><path d="M4 21l3-2h10l3 2"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/></svg>
+          </div>
+          <h3 class="font-display text-xl lg:text-2xl leading-tight mb-3">Openbaar vervoer</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">Bushaltes op loopafstand. Vanuit Nijmegen Centraal ben je in ongeveer 15 minuten ter plekke met bus of fiets.</p>
+        </article>
+
+        <article class="reveal bg-bg-surface border border-border-subtle rounded-[20px] p-7 lg:p-8">
+          <div class="w-12 h-12 rounded-2xl border border-gold/30 flex items-center justify-center text-gold mb-5">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 17V11l2-5h10l2 5v6"/><circle cx="8" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></svg>
+          </div>
+          <h3 class="font-display text-xl lg:text-2xl leading-tight mb-3">Met de auto</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">Parkeren is in de straat doorgaans goed mogelijk. Check actuele parkeerregelingen op de borden ter plaatse.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA STRIP ============ -->
+  <section class="py-20 lg:py-28">
+    <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
+      <div class="reveal bg-gradient-to-br from-bg-elevated via-bg-surface to-bg-elevated border border-gold/20 rounded-[32px] p-10 lg:p-16 text-center relative overflow-hidden">
+        <svg class="leaf-deco -top-10 -left-10 w-[300px] h-[300px]" viewBox="0 0 200 200" fill="#D4A55A"><path d="M100 0c40 60 60 80 100 100-60 40-80 60-100 100C60 140 40 120 0 100 60 60 80 40 100 0z"/></svg>
+        <svg class="leaf-deco -bottom-10 -right-10 w-[300px] h-[300px] rotate-180" viewBox="0 0 200 200" fill="#D4A55A"><path d="M100 0c40 60 60 80 100 100-60 40-80 60-100 100C60 140 40 120 0 100 60 60 80 40 100 0z"/></svg>
+        <div class="relative">
+          <h2 class="font-display text-3xl lg:text-5xl leading-[1.1] mb-6 max-w-2xl mx-auto">
+            Klaar voor een eerste <em class="italic text-gold/90">afspraak?</em>
+          </h2>
+          <p class="text-ink-muted max-w-xl mx-auto mb-9">Bel, mail of stuur een WhatsApp. Zeven dagen geopend van 11:00 tot 23:00.</p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="tel:+31652766898" class="cta-gold inline-flex items-center gap-2 bg-gold text-bg-deep px-7 py-4 rounded-full text-sm font-semibold tracking-wide hover:bg-gold-soft transition-colors">
+              <span>Bel 06 5276 6898</span>
+            </a>
+            <a href="mailto:info@massagesalonaphrodite.nl" class="inline-flex items-center gap-2 border border-border-subtle text-ink-primary px-7 py-4 rounded-full text-sm font-semibold hover:border-gold hover:text-gold transition-colors">
+              Stuur een e-mail
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="border-t border-border-subtle/50 py-14">
+    <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
+      <div class="grid md:grid-cols-4 gap-10 mb-12">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="w-10 h-10 rounded-full border border-gold/50 flex items-center justify-center text-gold logo-mark text-xl">a</span>
+            <span class="logo-mark text-2xl text-ink-primary">Massagesalon Aphrodite <span class="text-ink-muted not-italic font-sans font-normal text-sm tracking-kicker uppercase ml-1">Massage</span></span>
+          </div>
+          <p class="text-ink-muted text-sm leading-relaxed max-w-md">
+            Klassieke, ontspannings-, sensuele, hot stone, Thaise en duomassages — een rustige sensuele oase aan de Hertogstraat in Nijmegen-Centrum.
+          </p>
+        </div>
+        <div>
+          <p class="text-[11px] tracking-kicker uppercase text-gold font-semibold mb-4">Praktijk</p>
+          <ul class="space-y-3 text-sm text-ink-muted">
+            <li>Hertogstraat 67<br/>Nijmegen-Centrum</li>
+            <li><a href="tel:+31652766898" class="link-gold text-ink-primary">06 5276 6898</a></li>
+            <li><a href="mailto:info@massagesalonaphrodite.nl" class="link-gold text-ink-primary">info@massagesalonaphrodite.nl</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-[11px] tracking-kicker uppercase text-gold font-semibold mb-4">Menu</p>
+          <ul class="space-y-2 text-sm">
+            <li><a href="over-ons.html" class="link-gold text-ink-primary/90 hover:text-gold">Onze salon</a></li>
+            <li><a href="behandelingen.html" class="link-gold text-ink-primary/90 hover:text-gold">Massages</a></li>
+            <li><a href="behandelingen.html#cadeau" class="link-gold text-ink-primary/90 hover:text-gold">Cadeaubon</a></li>
+            <li><a href="locaties.html" class="link-gold text-ink-primary/90 hover:text-gold">Praktijk</a></li>
+            <li><a href="index.html#reviews" class="link-gold text-ink-primary/90 hover:text-gold">Recensies</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-border-subtle/50 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-ink-muted">
+        <p>© <span id="year"></span> Massagesalon Aphrodite · KvK 09201686</p>
+        <div class="flex items-center gap-5">
+          <a href="#" target="_blank" rel="noopener" class="hover:text-gold transition-colors">LinkedIn</a>
+          <a href="https://www.facebook.com/massagesalonaphrodite" target="_blank" rel="noopener" class="hover:text-gold transition-colors">Facebook</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced && window.Lenis) {
+      const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+      function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+      requestAnimationFrame(raf);
+      lenis.on('scroll', () => ScrollTrigger.update());
+    }
+    const nav = document.getElementById('site-nav');
+    const onScroll = () => {
+      if (window.scrollY > 40) nav.classList.add('nav-scrolled');
+      else nav.classList.remove('nav-scrolled');
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    const toggle = document.getElementById('mobile-toggle');
+    const drawer = document.getElementById('mobile-drawer');
+    toggle?.addEventListener('click', () => {
+      const hidden = drawer.classList.contains('hidden');
+      if (hidden) { drawer.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+      else { drawer.classList.add('hidden'); document.body.style.overflow = ''; }
+    });
+    drawer?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      drawer.classList.add('hidden'); document.body.style.overflow = '';
+    }));
+    if (window.gsap && window.ScrollTrigger) {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.utils.toArray('.reveal').forEach(el => {
+        gsap.fromTo(el, { opacity: 0, y: 28 }, {
+          opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+        });
+      });
+      gsap.utils.toArray('.reveal-img').forEach(el => {
+        gsap.fromTo(el, { clipPath: 'inset(0 100% 0 0)' }, {
+          clipPath: 'inset(0 0% 0 0)', duration: 1.1, ease: 'power3.inOut',
+          scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+        });
+      });
+    }
+  </script>
+  <script src="js/booking.js" defer></script>
+
+  <!-- Floating Boek-nu CTA — bottom-right on all pages -->
+  <a data-book href="index.html#boeken" aria-label="Boek nu een afspraak"
+     class="fab-book fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[90] inline-flex items-center gap-2 bg-gold text-bg-deep pl-4 pr-5 py-3 rounded-full text-sm font-semibold shadow-[0_12px_32px_rgba(0,0,0,0.30)] hover:scale-105 hover:shadow-[0_16px_40px_rgba(0,0,0,0.40)] transition-all duration-200">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+    </svg>
+    <span>Boek nu</span>
+  </a>
+</body>
+</html>

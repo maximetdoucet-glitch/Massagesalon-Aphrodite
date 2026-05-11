@@ -1,0 +1,11 @@
+{
+  "name": "massagesalon-aphrodite",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Massagepraktijk Massagesalon Aphrodite — site + Cal.com booking proxy",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}
